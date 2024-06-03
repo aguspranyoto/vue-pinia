@@ -23,7 +23,7 @@ export const usePostsStore = defineStore('posts-store', {
 
   actions: {
     getPosts() {
-      fetch('http://localhost:8080/posts')
+      fetch('http://localhost:3000/posts')
         .then((res) => res.json())
         .then((data) => {
           this.posts = data
@@ -37,21 +37,42 @@ export const usePostsStore = defineStore('posts-store', {
         })
     },
     addPost(post) {
-      this.posts.push({
+      const newPost = {
         id: this.posts.length + 1,
         title: post.title,
         body: post.body,
         author: 'Agus Pranyoto',
         created_at: new Date().toLocaleDateString(),
         is_saved: false
-      })
+      }
+      this.posts.push(newPost)
+
+      fetch('http://localhost:3000/posts', {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(newPost)
+      }).catch((err) => console.log(err))
     },
     deletePost(id) {
       this.posts = this.posts.filter((p) => p.id !== id)
+
+      fetch(`http://localhost:3000/posts/${id}`, {
+        method: 'DELETE'
+      }).catch((err) => console.log(err))
     },
     savePost(id) {
       const post = this.posts.find((p) => p.id === id)
       post.is_saved = !post.is_saved
+
+      fetch(`http://localhost:3000/posts/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({ is_saved: post.is_saved })
+      }).catch((err) => console.log(err))
     }
   }
 })
