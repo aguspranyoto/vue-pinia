@@ -5,7 +5,8 @@ export const usePostsStore = defineStore('posts-store', {
   state() {
     return {
       posts: [],
-      loading: true
+      loading: true,
+      errMsg: ''
     }
   },
   // computed
@@ -27,6 +28,12 @@ export const usePostsStore = defineStore('posts-store', {
         .then((data) => {
           this.posts = data
           this.loading = false
+        })
+        .catch((err) => {
+          this.errMsg = 'Something went wrong'
+          this.loading = false
+
+          console.log(err)
         })
     },
     addPost(post) {

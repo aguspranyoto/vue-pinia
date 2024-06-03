@@ -24,6 +24,13 @@ const setPostFilter = () => {
     </button>
   </div>
   <div class="mt-6">
+    <div
+      v-if="postsStore.errMsg"
+      class="bg-red-500 p-6 w-full mb-3 rounded-lg text-center text-white"
+    >
+      <p class="text-xl">{{ postsStore.errMsg }}</p>
+    </div>
+
     <div v-if="postFilter === 'All'">
       <div v-for="post in postsStore.sorted" :key="post.id" class="mb-6">
         <MyWrapper>
